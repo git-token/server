@@ -1,0 +1,18 @@
+version: '3.0'
+services:
+  gittoken:
+    ports:
+      - 1324:1324
+      - 1325:1325
+    build:
+      context: .
+  parity:
+    ports:
+      - 8080:8080
+      - 8180:8180
+      - 8545:8545
+      - 30303:30303
+    image: "parity/parity:v1.6.8"
+    volumes:
+      - ./parity/:/mnt/
+    command: --rpccorsdomain="*" --geth --config /mnt/config.toml
