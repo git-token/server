@@ -4,8 +4,7 @@ services:
     ports:
       - 1324:1324
       - 1325:1325
-    build:
-      context: .
+    image: "gittoken/express-server:v1"
   parity:
     ports:
       - 8080:8080
