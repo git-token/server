@@ -20,7 +20,6 @@ disable = false
 port = 8180
 interface = "0.0.0.0"
 path = "/mnt/signer"
-hosts = ["all"]
 
 [rpc]
 #  JSON-RPC will be listening for connections on IP 0.0.0.0.
