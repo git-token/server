@@ -15,7 +15,7 @@ services:
     volumes:
       # Ensure volume paths are correct on host; e.g. the following assumes
       # the docker host has pulled this repo at the location,
-      # `/gittoken/express-server`, and has a valid config file located within
+      # `~/.gittoken/express-server`, and has a valid config file located within
       # the /parity subdirectory
-      - /gittoken/express-server/parity/:/mnt/
+      - ~/.gittoken/express-server/parity/:/mnt/
     command: --rpccorsdomain="*" --geth --config /mnt/config.toml
