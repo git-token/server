@@ -1,11 +1,14 @@
 FROM node:6.11.0
 
+RUN npm i -g yarn
+
 WORKDIR /gittoken-server
-ADD . .
 
-RUN npm install
-RUN npm run build-src
+RUN git clone https://github.com/git-token/express-server.git .
 
-ENTRYPOINT npm start
+RUN yarn install
+RUN yarn run build-src
+
+ENTRYPOINT yarn run start
 
 EXPOSE 1324 1325
