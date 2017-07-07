@@ -3,16 +3,16 @@
 
 [parity]
 # Parity syncs only when an external interface is active.
-mode = "active"
+mode = "last"
 # Local Development Chain
 chain = "/mnt/chain.json"
 
-base_path = "/mnt/"
+base_path = "/mnt"
 [account]
 # From: [,,] you'll be able to send tranasactions without password.
 # Replace the following address to the corresponding passkey
 unlock = ["024138ba30f69f108a4e0aad9d51b4b4a4e03dd7"]
-password = ["/mnt/.pk"]
+password = ["/mnt/keys/DevelopmentChain/.pk"]
 
 [ui]
 force = false

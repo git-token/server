@@ -18,4 +18,4 @@ services:
       # `~/.gittoken/express-server`, and has a valid config file located within
       # the /parity subdirectory
       - /home/ryan/.gittoken/express-server/parity/:/mnt/
-    command: --rpccorsdomain="*" --geth --config /mnt/config.toml
+    command: --reseal-min-period 0 --rpccorsdomain="*" --geth --config /mnt/config.toml
