@@ -4,7 +4,7 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import GitTokenMiddleware from 'gittoken-api-middleware/dist/index'
 
-import gittokenConfig from '../gittoken.config'
+const gittokenConfig = require(process.argv[2] || `${process.cwd()}/gittoken.config.js`)
 
 const app = express()
 const port = 1324
@@ -15,7 +15,6 @@ app.use(bodyParser.urlencoded({ extended: true })) // handle URL-encoded data
 app.use(express.static(process.cwd()))
 
 let gittoken = new GitTokenMiddleware(gittokenConfig)
-
 app.use('/gittoken', gittoken.routeRequests())
 
 // let faucet = new Faucet({

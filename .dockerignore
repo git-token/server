@@ -1,1 +1,4 @@
+/gittoken/*
+/parity/keys/*
 node_modules
+gittoken.config.js
