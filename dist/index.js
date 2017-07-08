@@ -32,8 +32,6 @@ app.use(_bodyParser2.default.json()); // handle json data
 app.use(_bodyParser2.default.urlencoded({ extended: true })); // handle URL-encoded data
 app.use(_express2.default.static(process.cwd()));
 
-console.log('gittokenConfig', gittokenConfig);
-
 var gittoken = new _index2.default(gittokenConfig);
 app.use('/gittoken', gittoken.routeRequests());
 

@@ -4,7 +4,8 @@ RUN npm i -g yarn
 
 WORKDIR /gittoken-server
 
-RUN git clone https://github.com/git-token/express-server.git .
+# RUN git clone https://github.com/git-token/express-server.git .
+ADD . .
 
 RUN yarn install
 RUN yarn run build-src

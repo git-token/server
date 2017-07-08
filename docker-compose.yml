@@ -4,7 +4,11 @@ services:
     ports:
       - 1324:1324
       - 1325:1325
-    image: "gittoken/express-server:v1"
+    # image: "gittoken/express-server:v1"
+    build:
+      context: .
+    volumes:
+      - /root/gittoken-server/:/mnt/
   parity:
     ports:
       - 8080:8080
@@ -17,5 +21,5 @@ services:
       # the docker host has pulled this repo at the location,
       # `~/.gittoken/express-server`, and has a valid config file located within
       # the /parity subdirectory
-      - /root/gittoken-server/parity/:/mnt/
-    command: --reseal-min-period 0 --gasprice 0 --rpccorsdomain="*" --geth --config /mnt/config.toml
+      - /root/gittoken-server/parity/:/mnt/parity
+    command: --reseal-min-period 0 --gasprice 0 --rpccorsdomain="*" --geth --config /mnt/parity/config.toml

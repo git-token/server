@@ -1,5 +1,5 @@
 const protocol = 'http'
-const host = '127.0.0.1'
+const host = '138.68.225.133'
 const port = 8545
 
 module.exports = {

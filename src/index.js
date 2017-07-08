@@ -14,8 +14,6 @@ app.use(bodyParser.json()) // handle json data
 app.use(bodyParser.urlencoded({ extended: true })) // handle URL-encoded data
 app.use(express.static(process.cwd()))
 
-console.log('gittokenConfig', gittokenConfig)
-
 let gittoken = new GitTokenMiddleware(gittokenConfig)
 app.use('/gittoken', gittoken.routeRequests())
 

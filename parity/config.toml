@@ -5,21 +5,21 @@
 # Parity syncs only when an external interface is active.
 mode = "last"
 # Local Development Chain
-chain = "/mnt/chain.json"
+chain = "/mnt/parity/chain.json"
 
-base_path = "/mnt"
+base_path = "/mnt/parity"
 [account]
 # From: [,,] you'll be able to send tranasactions without password.
 # Replace the following address to the corresponding passkey
 unlock = ["024138ba30f69f108a4e0aad9d51b4b4a4e03dd7"]
-password = ["/mnt/keys/DevelopmentChain/.pk"]
+password = ["/mnt/parity/keys/DevelopmentChain/.pk"]
 
 [ui]
 force = false
 disable = false
 port = 8180
 interface = "0.0.0.0"
-path = "/mnt/signer"
+path = "/mnt/parity/signer"
 
 [rpc]
 #  JSON-RPC will be listening for connections on IP 0.0.0.0.
