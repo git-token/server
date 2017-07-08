@@ -17,5 +17,5 @@ services:
       # the docker host has pulled this repo at the location,
       # `~/.gittoken/express-server`, and has a valid config file located within
       # the /parity subdirectory
-      - /home/ryan/.gittoken/express-server/parity/:/mnt/
+      - /root/gittoken-server/parity/:/mnt/
     command: --reseal-min-period 0 --gasprice 0 --rpccorsdomain="*" --geth --config /mnt/config.toml
