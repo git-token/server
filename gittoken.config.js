@@ -28,6 +28,4 @@ const config = {
   }
 }
 
-console.log('GITTOKEN CONFIG::config', config)
-
 module.exports = config
