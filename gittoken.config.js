@@ -1,5 +1,5 @@
 /**
- * Configuration file for GitTokern service instance
+ * Configuration file for GitToken server instance
  * This file parses the environment variable passed to the docker-compose.yml
  * env_file field, then exports the configuration to be used in the application.
  * @type {Object}
