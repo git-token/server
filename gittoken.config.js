@@ -1,16 +1,22 @@
+/**
+ * Configuration file for GitTokern service instance
+ * This file parses the environment variable passed to the docker-compose.yml
+ * env_file field, then exports the configuration to be used in the application.
+ * @type {Object}
+ */
 const config = {
   web3Provider: process.env['WEB3_PROVIDER'],
-  isGitHubHook: process.env['IS_GITHUB_WEBHOOK'],
+  isGitHubHook: Boolean(process.env['IS_GITHUB_WEBHOOK'] === 'true'),
   dirPath: process.env['GITTOKEN_DIRECTORY_PATH'],
   keystoreFileName: process.env['GITTOKEN_KEYSTORE_FILENAME'],
   contractFile: process.env['GITTOKEN_CONTRACT_FILE'],
-  faucetActive: process.env['GITTOKEN_FAUCET_ACTIVE'],
+  faucetActive: Boolean(process.env['GITTOKEN_FAUCET_ACTIVE'] === 'true'),
   config: {
     contributor: process.env['GITTOKEN_CONTRACT_OWNER'],
     email: process.env['GITTOKEN_CONTRACT_OWNER_EMAIL'],
     organization: process.env['GITTOKEN_CONTRACT_ORGANIZATION'],
     symbol: process.env['GITTOKEN_CONTRACT_SYMBOL'],
-    decimals: +process.env['GITTOKEN_CONTRACT_DECIMALS']
+    decimals: parseInt(process.env['GITTOKEN_CONTRACT_DECIMALS'])
   },
   githubCredentials: {
     clientID: process.env['GITHUB_API_ID'],
