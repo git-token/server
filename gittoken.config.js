@@ -13,7 +13,7 @@ const config = {
   faucetActive: Boolean(process.env['GITTOKEN_FAUCET_ACTIVE'] === 'true'),
   config: {
     contributor: process.env['GITTOKEN_CONTRACT_OWNER'],
-    email: process.env['GITTOKEN_CONTRACT_OWNER_EMAIL'],
+    username: process.env['GITTOKEN_CONTRACT_OWNER_USERNAME'],
     organization: process.env['GITTOKEN_CONTRACT_ORGANIZATION'],
     symbol: process.env['GITTOKEN_CONTRACT_SYMBOL'],
     decimals: parseInt(process.env['GITTOKEN_CONTRACT_DECIMALS'])
