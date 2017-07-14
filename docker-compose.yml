@@ -4,7 +4,8 @@ services:
     ports:
       - 1324:1324
       - 1325:1325
-    # image: "gittoken/express-server:v1"
+    env_file:
+      - /root/gittoken-server/gittoken.env
     build:
       context: .
     volumes:
