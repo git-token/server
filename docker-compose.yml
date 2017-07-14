@@ -5,7 +5,7 @@ services:
       - 1324:1324
       - 1325:1325
     env_file:
-      - /root/gittoken-server/gittoken.env
+      - gittoken.env
     build:
       context: .
     volumes:
