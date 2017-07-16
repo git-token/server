@@ -12,6 +12,10 @@ var _cors = require('cors');
 
 var _cors2 = _interopRequireDefault(_cors);
 
+var _path = require('path');
+
+var _path2 = _interopRequireDefault(_path);
+
 var _bodyParser = require('body-parser');
 
 var _bodyParser2 = _interopRequireDefault(_bodyParser);
@@ -26,41 +30,72 @@ var _passport2 = _interopRequireDefault(_passport);
 
 var _passportGithub = require('passport-github');
 
+var _expressGraphql = require('express-graphql');
+
+var _expressGraphql2 = _interopRequireDefault(_expressGraphql);
+
+var _graphql = require('graphql');
+
+var _sequelize = require('./sequelize');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var gittokenConfig = require(process.argv[2] || process.cwd() + '/gittoken.config.js');
-var githubCredentials = gittokenConfig.githubCredentials;
+var githubCredentials = gittokenConfig.githubCredentials,
+    sessionSecret = gittokenConfig.api.sessionSecret;
 
 
 var app = (0, _express2.default)();
 var port = 1324;
 
-app.use((0, _cors2.default)());
-app.use(_bodyParser2.default.json()); // handle json data
-app.use(_bodyParser2.default.urlencoded({ extended: true })); // handle URL-encoded data
-app.use(_express2.default.static(process.cwd()));
-
 _passport2.default.use(new _passportGithub.Strategy(githubCredentials, function (accessToken, refreshToken, profile, cb) {
-  return cb(null, true);
+  cb(null, { accessToken: accessToken, profile: profile });
 }));
 
-app.use('/auth/github', _passport2.default.authenticate('github'));
+_passport2.default.serializeUser(function (user, cb) {
+  cb(null, user);
+});
 
-app.use('/auth/github/callback', _passport2.default.authenticate('github', { failureRedirect: '/' }), function (req, res) {
+_passport2.default.deserializeUser(function (user, cb) {
+  cb(null, user);
+});
+
+app.use((0, _cors2.default)());
+app.use(require('cookie-parser')());
+app.use(_bodyParser2.default.json()); // handle json data
+app.use(_bodyParser2.default.urlencoded({ extended: true })); // handle URL-encoded data
+
+/**
+ * Serve static files
+ */
+
+// app.use('/',
+//   express.static(`${process.cwd()}/node_modules/gittoken-messenger-ui/`))
+
+app.use('/', _express2.default.static(process.cwd() + '/node_modules/gittoken-dashboard/'));
+
+app.use(require('express-session')({
+  secret: sessionSecret,
+  resave: true,
+  saveUninitialized: true
+}));
+
+/**
+ * Setup GitHub OAuth Strategy
+ */
+app.use(_passport2.default.initialize());
+app.use(_passport2.default.session());
+
+app.get('/auth/github', _passport2.default.authenticate('github'));
+app.get('/auth/github/callback', _passport2.default.authenticate('github', { failureRedirect: '/' }), function (req, res) {
   res.redirect('/');
 });
 
+/**
+ * Establish GitToken Middleware Services
+ */
 var gittoken = new _index2.default(gittokenConfig);
 app.use('/gittoken', gittoken.routeRequests());
-app.use('/', _express2.default.static(process.cwd() + '/node_modules/gittoken-messenger-ui/'));
-// let faucet = new Faucet({
-//   dirPath: `${process.cwd()}/gittoken`,
-//   keystoreFileName: `.keystore`,
-//   web3Provider: `${protocol}://${host}:${port}`
-// })
-//
-//
-
 
 app.listen(port, function () {
   console.log('GitToken Server Listening on Port ' + port);
