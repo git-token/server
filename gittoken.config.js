@@ -1,9 +1,18 @@
 /**
+ * NOTE If running the server using node instead of docker-compose, uncomment the line
+ * below to read the .env file
+ */
+
+ // require('dotenv').config({ path: `${process.cwd()}/gittoken.env`})
+
+/**
  * Configuration file for GitToken server instance
  * This file parses the environment variable passed to the docker-compose.yml
  * env_file field, then exports the configuration to be used in the application.
  * @type {Object}
  */
+
+
 const config = {
   web3Provider: process.env['WEB3_PROVIDER'],
   isGitHubHook: Boolean(process.env['IS_GITHUB_WEBHOOK'] === 'true'),
