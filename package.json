@@ -23,7 +23,7 @@
     "express-session": "^1.15.3",
     "gittoken-api-middleware": "0.0.68",
     "gittoken-contracts": "0.0.3",
-    "gittoken-dashboard": "0.0.7",
+    "gittoken-dashboard": "0.0.42",
     "gittoken-messenger-ui": "0.0.9",
     "graphql": "^0.10.4",
     "keccak": "^1.3.0",
