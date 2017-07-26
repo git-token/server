@@ -1,6 +1,6 @@
 /**
- * NOTE If running the server using node instead of docker-compose, uncomment the line
- * below to read the .env file
+ * NOTE If running the server using NodeJS instead of docker-compose, uncomment the line
+ * below to read the .env file and map to gittoken.config
  */
 
  // require('dotenv').config({ path: `${process.cwd()}/gittoken.env`})
@@ -22,6 +22,7 @@ const config = {
   faucetActive: Boolean(process.env['GITTOKEN_FAUCET_ACTIVE'] === 'true'),
   config: {
     contributor: process.env['GITTOKEN_CONTRACT_OWNER'],
+    name: process.env['GITTOKEN_CONTRACT_NAME'],
     username: process.env['GITTOKEN_CONTRACT_OWNER_USERNAME'],
     organization: process.env['GITTOKEN_CONTRACT_ORGANIZATION'],
     symbol: process.env['GITTOKEN_CONTRACT_SYMBOL'],
