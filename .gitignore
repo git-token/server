@@ -1,4 +1,5 @@
 /gittoken/*
 /parity/keys/*
+/keystore/*
 node_modules
 gittoken.env
