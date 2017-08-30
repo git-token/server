@@ -50,6 +50,14 @@ CREATE TABLE IF NOT EXISTS summary_statistics (
   CONSTRAINT summary_statistics_pk PRIMARY KEY (contractAddress)
 );
 
+CREATE TABLE IF NOT EXISTS token_inflation (
+  date        TIMESTAMP DEFAULT '1970-01-01 00:00:01.001',
+  tokenSupply INTEGER,
+  rate        REAL,
+  avgRate     REAL,
+  CONSTRAINT token_inflation_pk PRIMARY KEY (date)
+);
+
 -- CREATE TABLE IF NOT EXISTS contributor_verified (
 --   txHash          CHAR(66),
 --   contributor     CHAR(42),

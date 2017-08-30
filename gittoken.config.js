@@ -3,7 +3,8 @@
  * below to read the .env file and map to gittoken.config
  */
 
- // require('dotenv').config({ path: `${process.cwd()}/gittoken.env`})
+ require('dotenv').config({ path: `${process.cwd()}/gittoken.env`})
+ require('dotenv').config({ path: `${process.cwd()}/mysql.env`})
 
 /**
  * Configuration file for GitToken server instance
@@ -35,6 +36,12 @@ const config = {
   },
   api: {
     sessionSecret: process.env['GITTOKEN_API_SESSION_SECRET']
+  },
+  mysqlOpts: {
+    host: process.env['MYSQL_HOST'],
+    user: process.env['MYSQL_USER'],
+    password: process.env['MYSQL_ROOT_PASSWORD'],
+    database: process.env['MYSQL_DATABASE']
   }
 }
 

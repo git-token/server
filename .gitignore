@@ -3,3 +3,4 @@
 /keystore/*
 node_modules
 gittoken.env
+mysql.env
