@@ -28,6 +28,8 @@ export default function parseContribution({ headers, payload }) {
         case 'status':
           return payload['state']
           break;
+        case 'push':
+          return ''
         default:
           return payload['action']
       }
@@ -39,9 +41,6 @@ export default function parseContribution({ headers, payload }) {
 
       const rewardValue = data[0].toNumber()
       const reservedValue = data[1].toNumber()
-
-      console.log('reservedValue', reservedValue)
-      console.log('rewardValue', rewardValue)
 
       resolve({
         username: payload['sender']['login'],
