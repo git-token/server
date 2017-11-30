@@ -16,12 +16,10 @@
 
 const config = {
   web3Provider: process.env['WEB3_PROVIDER'],
-  isGitHubHook: Boolean(process.env['IS_GITHUB_WEBHOOK'] === 'true'),
   dirPath: process.env['GITTOKEN_DIRECTORY_PATH'],
-  keystoreFileName: process.env['GITTOKEN_KEYSTORE_FILENAME'],
-  contractFile: process.env['GITTOKEN_CONTRACT_FILE'],
-  faucetActive: Boolean(process.env['GITTOKEN_FAUCET_ACTIVE'] === 'true'),
-  config: {
+  recoveryShare: process.env['GITTOKEN_RECOVERY_SHARE'],
+  address: process.env['GITTOKEN_ADDRESS'],
+  gittokenParams: {
     contributor: process.env['GITTOKEN_CONTRACT_OWNER'],
     name: process.env['GITTOKEN_CONTRACT_NAME'],
     username: process.env['GITTOKEN_CONTRACT_OWNER_USERNAME'],
@@ -35,7 +33,8 @@ const config = {
     callbackURL: process.env['GITHUB_API_CALLBACK_URL']
   },
   api: {
-    sessionSecret: process.env['GITTOKEN_API_SESSION_SECRET']
+    sessionSecret: process.env['GITTOKEN_API_SESSION_SECRET'],
+    port: process.env['GITTOKEN_API_PORT']
   },
   mysqlOpts: {
     host: process.env['MYSQL_HOST'],

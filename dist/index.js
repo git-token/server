@@ -1,102 +1,144 @@
 'use strict';
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _getPrototypeOf = require('babel-runtime/core-js/object/get-prototype-of');
+
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require('babel-runtime/helpers/createClass');
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require('babel-runtime/helpers/possibleConstructorReturn');
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require('babel-runtime/helpers/inherits');
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
 var _express = require('express');
 
 var _express2 = _interopRequireDefault(_express);
-
-var _http = require('http');
-
-var _http2 = _interopRequireDefault(_http);
 
 var _cors = require('cors');
 
 var _cors2 = _interopRequireDefault(_cors);
 
-var _path = require('path');
-
-var _path2 = _interopRequireDefault(_path);
-
 var _bodyParser = require('body-parser');
 
 var _bodyParser2 = _interopRequireDefault(_bodyParser);
-
-var _index = require('gittoken-api-middleware/dist/index');
-
-var _index2 = _interopRequireDefault(_index);
 
 var _passport = require('passport');
 
 var _passport2 = _interopRequireDefault(_passport);
 
-var _passportGithub = require('passport-github');
+var _mysql = require('mysql');
 
-var _expressGraphql = require('express-graphql');
+var _mysql2 = _interopRequireDefault(_mysql);
 
-var _expressGraphql2 = _interopRequireDefault(_expressGraphql);
+var _passportGithub = require('passport-github2');
 
-var _graphql = require('graphql');
+var _index = require('./utils/index');
 
-var _sequelize = require('./sequelize');
+var _index2 = require('./contracts/index');
+
+var _index3 = _interopRequireDefault(_index2);
+
+var _index4 = require('./mysql/index');
+
+var _index5 = require('./routers/index');
+
+var _index6 = require('./middleware/index');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var gittokenConfig = require(process.argv[2] || process.cwd() + '/gittoken.config.js');
-var githubCredentials = gittokenConfig.githubCredentials,
-    sessionSecret = gittokenConfig.api.sessionSecret;
+// import GitTokenKeystoreGenerator from 'gittoken-keystore-generator'
+var GitTokenServer = function (_GitTokenContracts) {
+  (0, _inherits3.default)(GitTokenServer, _GitTokenContracts);
+
+  function GitTokenServer(_ref) {
+    var mysqlOpts = _ref.mysqlOpts,
+        _ref$api = _ref.api,
+        port = _ref$api.port,
+        sessionSecret = _ref$api.sessionSecret,
+        githubCredentials = _ref.githubCredentials,
+        dirPath = _ref.dirPath,
+        address = _ref.address,
+        recoveryShare = _ref.recoveryShare,
+        web3Provider = _ref.web3Provider;
+    (0, _classCallCheck3.default)(this, GitTokenServer);
+
+    /* Bind Options*/
+    var _this = (0, _possibleConstructorReturn3.default)(this, (GitTokenServer.__proto__ || (0, _getPrototypeOf2.default)(GitTokenServer)).call(this, { dirPath: dirPath, address: address, recoveryShare: recoveryShare, web3Provider: web3Provider }));
+
+    _this.port = port;
+    _this.githubCredentials = githubCredentials;
+    _this.sessionSecret = sessionSecret;
+    _this.web3Provider = web3Provider;
+
+    /* Bind Methods */
+    _this.AuthRouter = _index5.AuthRouter.bind(_this);
+    _this.WebHookRouter = _index5.WebHookRouter.bind(_this);
+    _this.WebHookMiddleware = _index6.WebHookMiddleware.bind(_this);
+    _this.parseContribution = _index.parseContribution.bind(_this);
+    _this.signContribution = _index.signContribution.bind(_this);
+    _this.query = _index4.query.bind(_this);
+    _this.saveContribution = _index4.saveContribution.bind(_this);
+    _this.saveUserBalance = _index4.saveUserBalance.bind(_this);
+    _this.saveTotalSupply = _index4.saveTotalSupply.bind(_this);
+
+    /* MySql Connection */
+    _this.mysql = _mysql2.default.createConnection(mysqlOpts);
+
+    /* Express Application */
+    _this.app = (0, _express2.default)();
+    _this.app.use((0, _cors2.default)());
+    _this.app.use(require('cookie-parser')());
+    _this.app.use(require('express-session')({
+      secret: _this.sessionSecret,
+      resave: true,
+      saveUninitialized: true
+    }));
+    _this.app.use(_bodyParser2.default.json()); // handle json data
+    _this.app.use(_bodyParser2.default.urlencoded({ extended: true })); // handle
+
+    _this.app.use('/auth/', _this.AuthRouter());
+    _this.app.use('/webhook/', _this.WebHookRouter());
+
+    _this.app.use('/', function (req, res) {
+      res.send('Hello, GitToken Server!');
+    });
+
+    /* Run GitToken Server */
+    _this.listen();
+    return _this;
+  }
+
+  /**
+   * [listen description]
+   * @return {[type]} [description]
+   */
 
 
-var app = (0, _express2.default)();
-var port = 1324;
+  (0, _createClass3.default)(GitTokenServer, [{
+    key: 'listen',
+    value: function listen() {
+      var _this2 = this;
 
-_passport2.default.use(new _passportGithub.Strategy(githubCredentials, function (accessToken, refreshToken, profile, cb) {
-  cb(null, { accessToken: accessToken, profile: profile });
-}));
+      this.app.listen(this.port, function () {
+        console.log('GitToken Server Listening on Port ' + _this2.port);
+      });
+    }
+  }]);
+  return GitTokenServer;
+}(_index3.default);
 
-_passport2.default.serializeUser(function (user, cb) {
-  cb(null, user);
-});
-
-_passport2.default.deserializeUser(function (user, cb) {
-  cb(null, user);
-});
-
-app.use((0, _cors2.default)());
-app.use(require('cookie-parser')());
-app.use(_bodyParser2.default.json()); // handle json data
-app.use(_bodyParser2.default.urlencoded({ extended: true })); // handle URL-encoded data
-
-/**
- * Serve static files
- */
-
-// app.use('/',
-//   express.static(`${process.cwd()}/node_modules/gittoken-messenger-ui/`))
-
-app.use('/', _express2.default.static(process.cwd() + '/node_modules/gittoken-dashboard/'));
-
-app.use(require('express-session')({
-  secret: sessionSecret,
-  resave: true,
-  saveUninitialized: true
-}));
-
-/**
- * Setup GitHub OAuth Strategy
- */
-app.use(_passport2.default.initialize());
-app.use(_passport2.default.session());
-
-app.get('/auth/github', _passport2.default.authenticate('github'));
-app.get('/auth/github/callback', _passport2.default.authenticate('github', { failureRedirect: '/' }), function (req, res) {
-  res.redirect('/');
-});
-
-/**
- * Establish GitToken Middleware Services
- */
-var gittoken = new _index2.default(gittokenConfig);
-app.use('/gittoken', gittoken.routeRequests());
-
-app.listen(port, function () {
-  console.log('GitToken Server Listening on Port ' + port);
-});
+exports.default = GitTokenServer;

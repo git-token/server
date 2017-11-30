@@ -1,3 +1,5 @@
 /gittoken/*
-/parity/keys/DevelopmentChain/*
 node_modules
+src_old
+dist
+keystore/*

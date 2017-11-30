@@ -1,0 +1,94 @@
+{
+  "name": "Torvalds",
+  "engine": {
+    "authorityRound": {
+      "params": {
+        "gasLimitBoundDivisor": "0x400",
+        "stepDuration": "1",
+        "validators": {
+          "list": [
+            "0x00a054ffda97220e9a7483e6e7b87d445e4d6c96"
+          ]
+        }
+      }
+    }
+  },
+  "params": {
+    "gasLimitBoundDivisor": "0x400",
+    "maximumExtraDataSize": "0x20",
+    "minGasLimit": "0xB71B00",
+    "networkID": "0x9"
+  },
+  "genesis": {
+    "seal": {
+      "authorityRound": {
+        "step": "0x0",
+        "signature": "0x0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+      }
+    },
+    "difficulty": "0x20000",
+    "gasLimit": "0xB71B00"
+  },
+  "accounts": {
+    "0x0000000000000000000000000000000000000001": {
+      "balance": "1",
+      "builtin": {
+        "name": "ecrecover",
+        "pricing": {
+          "linear": {
+            "base": 3000,
+            "word": 0
+          }
+        }
+      }
+    },
+    "0x0000000000000000000000000000000000000002": {
+      "balance": "1",
+      "builtin": {
+        "name": "sha256",
+        "pricing": {
+          "linear": {
+            "base": 60,
+            "word": 12
+          }
+        }
+      }
+    },
+    "0x0000000000000000000000000000000000000003": {
+      "balance": "1",
+      "builtin": {
+        "name": "ripemd160",
+        "pricing": {
+          "linear": {
+            "base": 600,
+            "word": 120
+          }
+        }
+      }
+    },
+    "0x0000000000000000000000000000000000000004": {
+      "balance": "1",
+      "builtin": {
+        "name": "identity",
+        "pricing": {
+          "linear": {
+            "base": 15,
+            "word": 3
+          }
+        }
+      }
+    },
+    "8CB2CeBB0070b231d4BA4D3b747acAebDFbbD142": {
+      "balance": "10000000000000000000000000000000000000000000"
+    },
+    "7fAc1b57EbB9a2bAeA4643f9efb6eE237e76A8E5": {
+      "balance": "10000000000000000000000000000000000000000000"
+    },
+    "024138ba30f69f108a4e0aad9d51b4b4a4e03dd7": {
+      "balance": "10000000000000000000000000000000000000000000"
+    },
+    "0x00a054ffda97220e9a7483e6e7b87d445e4d6c96": {
+      "balance": "10000000000000000000000000000000000000000000"
+    }
+  }
+}

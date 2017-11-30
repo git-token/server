@@ -1,75 +1,100 @@
 import express from 'express'
-import http from 'http'
 import cors from 'cors'
-import path from 'path'
 import bodyParser from 'body-parser'
-import GitTokenMiddleware from 'gittoken-api-middleware/dist/index'
+// import GitTokenKeystoreGenerator from 'gittoken-keystore-generator'
 import passport from 'passport'
-import { Strategy } from 'passport-github'
-import graphqlHTTP from 'express-graphql'
-import { buildSchema } from 'graphql'
-import { sequelize } from './sequelize'
+import mysql from 'mysql'
+import { Strategy } from 'passport-github2'
 
-const gittokenConfig = require(process.argv[2] || `${process.cwd()}/gittoken.config.js`)
-const { githubCredentials, api: { sessionSecret } } = gittokenConfig
+import {
+  signContribution,
+  parseContribution
+} from './utils/index'
 
-const app = express()
-const port = 1324
+import GitTokenContracts from './contracts/index'
 
-passport.use(new Strategy(githubCredentials,
-  function(accessToken, refreshToken, profile, cb) {
-    cb(null, { accessToken, profile });
-  })
-);
+import {
+  query,
+  saveContribution,
+  saveUserBalance,
+  saveTotalSupply
+} from './mysql/index'
 
-passport.serializeUser((user, cb) => {
-  cb(null, user)
-})
+import {
+  AuthRouter,
+  WebHookRouter
+} from './routers/index'
 
-passport.deserializeUser((user, cb) => {
-  cb(null, user)
-})
-
-app.use(cors())
-app.use(require('cookie-parser')());
-app.use(bodyParser.json()) // handle json data
-app.use(bodyParser.urlencoded({ extended: true })) // handle URL-encoded data
-
-/**
- * Serve static files
- */
-
-// app.use('/',
-//   express.static(`${process.cwd()}/node_modules/gittoken-messenger-ui/`))
-
-app.use('/', express.static(`${process.cwd()}/node_modules/gittoken-dashboard/`))
-
-app.use(require('express-session')({
-  secret: sessionSecret,
-  resave: true,
-  saveUninitialized: true
-}));
+import {
+  WebHookMiddleware
+} from './middleware/index'
 
 
-/**
- * Setup GitHub OAuth Strategy
- */
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.get('/auth/github', passport.authenticate('github'))
-app.get('/auth/github/callback',
- passport.authenticate('github', { failureRedirect: '/' }),
- (req, res) => { res.redirect('/') })
 
 
-/**
- * Establish GitToken Middleware Services
- */
-let gittoken = new GitTokenMiddleware(gittokenConfig)
-app.use('/gittoken', gittoken.routeRequests())
+export default class GitTokenServer extends GitTokenContracts {
+  constructor({
+    mysqlOpts,
+    api: { port, sessionSecret },
+    githubCredentials,
+    dirPath,
+    address,
+    recoveryShare,
+    web3Provider
+  }) {
+    super({ dirPath, address, recoveryShare, web3Provider })
+    /* Bind Options*/
+    this.port = port
+    this.githubCredentials = githubCredentials
+    this.sessionSecret = sessionSecret
+    this.web3Provider = web3Provider
+
+    /* Bind Methods */
+    this.AuthRouter = AuthRouter.bind(this)
+    this.WebHookRouter = WebHookRouter.bind(this)
+    this.WebHookMiddleware = WebHookMiddleware.bind(this)
+    this.parseContribution = parseContribution.bind(this)
+    this.signContribution = signContribution.bind(this)
+    this.query = query.bind(this)
+    this.saveContribution = saveContribution.bind(this)
+    this.saveUserBalance = saveUserBalance.bind(this)
+    this.saveTotalSupply = saveTotalSupply.bind(this)
+
+    /* MySql Connection */
+    this.mysql = mysql.createConnection(mysqlOpts)
+
+    /* Express Application */
+    this.app = express()
+    this.app.use(cors())
+    this.app.use(require('cookie-parser')());
+    this.app.use(require('express-session')({
+      secret: this.sessionSecret,
+      resave: true,
+      saveUninitialized: true
+    }));
+    this.app.use(bodyParser.json()) // handle json data
+    this.app.use(bodyParser.urlencoded({ extended: true })) // handle
+
+    this.app.use('/auth/', this.AuthRouter());
+    this.app.use('/webhook/', this.WebHookRouter());
+
+    this.app.use('/', (req, res) => {
+      res.send(`Hello, GitToken Server!`)
+    })
 
 
-app.listen(port, () => {
-  console.log(`GitToken Server Listening on Port ${port}`)
-})
+
+    /* Run GitToken Server */
+    this.listen()
+  }
+
+  /**
+   * [listen description]
+   * @return {[type]} [description]
+   */
+  listen() {
+    this.app.listen(this.port, () => {
+      console.log(`GitToken Server Listening on Port ${this.port}`)
+    })
+  }
+}

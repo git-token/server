@@ -8,11 +8,9 @@ mode = "last"
 chain = "/mnt/parity/chain.json"
 
 base_path = "/mnt/parity"
+
 [account]
-# From: [,,] you'll be able to send tranasactions without password.
-# Replace the following address to the corresponding passkey
-unlock = ["024138ba30f69f108a4e0aad9d51b4b4a4e03dd7"]
-password = ["/mnt/parity/keys/DevelopmentChain/.pk"]
+# GitToken Signer Wallet Will create keystore for this node
 
 [ui]
 force = false
@@ -31,17 +29,19 @@ port = 8545
 apis = ["web3", "eth", "net", "parity", "traces", "rpc"]
 hosts = ["all"]
 
-#[ws]
-#  JSON-RPC will be listening for connections on IP 0.0.0.0.
-#interface = "0.0.0.0"
-# Allows connecting from Origin '*'.
-#origins = "*"
+[websockets]
+disable = false
+port = 8546
+interface = "local"
+origins = ["*"]
+apis = ["web3", "eth", "net", "parity", "traces", "rpc", "secretstore"]
+hosts = ["all"]
 
-#[secretstore]
-# Secret Store will listen for connections on IP 0.0.0.0.
-#interface = "0.0.0.0"
-# Secret Store will listen for HTTP requests on IP 0.0.0.0.
-#http_interface = "0.0.0.0"
+[ipc]
+disable = false
+path = "/mnt/parity/jsonrpc.ipc"
+apis = ["web3", "eth", "net", "parity", "parity_accounts", "personal", "traces", "rpc", "secretstore"]
+
 
 [ipfs]
 # Secret Store will listen for connections on IP 0.0.0.0.
@@ -49,6 +49,19 @@ interface = "0.0.0.0"
 # Allows Cross-Origin Requests from domain '*'.
 cors = "*"
 
-[dapps]
-#  Dapps Server will listen for connections on IP 0.0.0.0.
-interface = "0.0.0.0"
+[network]
+port = 30303
+min_peers = 25
+max_peers = 50
+nat = "any"
+id = 9
+bootnodes = [
+  "enode://ec5473d51fe961d8df7d83b0c6fe431686e1c3fd5424ea9697d0de432e39fa461ca7ee5e636ea553e37cf6d5752e0c1ea43e5d6e71282e84017eabd8858e1c18@138.68.225.133:30303"
+]
+discovery = true
+warp = true
+allow_ips = "all"
+snapshot_peers = 0
+max_pending_peers = 64
+no_serve_light = false
+reserved_only = false

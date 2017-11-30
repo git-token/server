@@ -1,34 +1,36 @@
 version: '3.0'
+volumes:
+  torvalds-network:
+  gittoken-server:
+  mysql-volume:
 services:
   mysql:
     ports:
       - 3306:3306
     env_file:
       - mysql.env
+    volumes:
+      - mysql-volume:/var/lib/mysql
     image:
       mysql
   gittoken:
     ports:
-      - 1324:1324
-      - 1325:1325
+      - 4242:3000
     env_file:
       - gittoken.env
       - mysql.env
     build:
       context: .
     volumes:
-      - /root/gittoken-server/:/mnt/
-  parity:
+      - gittoken-server:/mnt/gittoken
+  torvalds:
     ports:
-      - 8080:8080
-      - 8180:8180
-      - 8545:8545
-      - 30303:30303
-    image: parity/parity:v1.6.8
+      - 5180:8180
+      - 5545:8545
+      - 5546:8546
+      - 30305:30303
+    build:
+      context: ./torvalds/.
     volumes:
-      # Ensure volume paths are correct on host; e.g. the following assumes
-      # the docker host has pulled this repo at the location,
-      # `~/.gittoken/express-server`, and has a valid config file located within
-      # the /parity subdirectory
-      - /root/gittoken-server/parity/:/mnt/parity
-    command: --reseal-min-period 0 --gasprice 0 --rpccorsdomain="*" --geth --config /mnt/parity/config.toml
+      - torvalds-network:/mnt/parity
+    command: --config /mnt/parity/config.toml
