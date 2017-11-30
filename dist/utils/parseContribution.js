@@ -54,8 +54,14 @@ function parseContribution(_ref) {
 
     var subEventType = getSubEventType({ eventType: eventType, payload: payload });
 
-    _promise2.default.resolve(_this.RewardPoints.getRewardDetails.call(eventType, subEventType)).then(function (data) {
-      console.log('data', data);
+    _this.RewardPoints.getRewardDetails.callAsync(eventType, subEventType).then(function (data) {
+
+      var rewardValue = data[0].toNumber();
+      var reservedValue = data[1].toNumber();
+
+      console.log('reservedValue', reservedValue);
+      console.log('rewardValue', rewardValue);
+
       resolve({
         username: payload['sender']['login'],
         contributor: null,
@@ -63,11 +69,12 @@ function parseContribution(_ref) {
         delivery_id: headers['x-github-delivery'],
         eventType: eventType,
         organization: payload['organization']['login'],
-        reservedValue: 0,
-        rewardValue: 0,
+        reservedValue: reservedValue,
+        rewardValue: rewardValue,
         subEventType: subEventType
       });
     }).catch(function (error) {
+      console.log('error', error);
       reject(error);
     });
   });
