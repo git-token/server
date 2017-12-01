@@ -16,59 +16,60 @@ function parseContribution(_ref) {
   var _this = this;
 
   var headers = _ref.headers,
-      payload = _ref.payload;
+      body = _ref.body;
 
   return new _promise2.default(function (resolve, reject) {
     var eventType = headers['x-github-event'];
 
     var getSubEventType = function getSubEventType(_ref2) {
       var eventType = _ref2.eventType,
-          payload = _ref2.payload;
+          body = _ref2.body;
 
       switch (eventType) {
         case 'create':
-          return payload['ref_type'];
+          return body['ref_type'];
           break;
         case 'delete':
-          return payload['ref_type'];
+          return body['ref_type'];
           break;
         case 'deployment_status':
-          return payload['state'];
+          return body['state'];
           break;
         case 'gollum':
-          return payload['pages'][0]['action']; // Should this be reward for each gollum (wiki page touched)?
+          return body['pages'][0]['action']; // Should this be reward for each gollum (wiki page touched)?
           break;
         case 'page_build':
-          return payload['build']['status'];
+          return body['build']['status'];
           break;
         case 'pull_request':
-          return payload['pull_request']['merged'] ? payload['pull_request']['merged'] : payload['action']; // ternary => true ? 'a' : 'b'
+          return body['pull_request']['merged'] ? body['pull_request']['merged'] : body['action']; // ternary => true ? 'a' : 'b'
           break;
         case 'status':
-          return payload['state'];
+          return body['state'];
           break;
+        case 'push':
+          return '';
+        case 'ping':
+          return '';
         default:
-          return payload['action'];
+          return body['action'];
       }
     };
 
-    var subEventType = getSubEventType({ eventType: eventType, payload: payload });
+    var subEventType = getSubEventType({ eventType: eventType, body: body });
 
     _this.RewardPoints.getRewardDetails.callAsync(eventType, subEventType).then(function (data) {
 
       var rewardValue = data[0].toNumber();
       var reservedValue = data[1].toNumber();
 
-      console.log('reservedValue', reservedValue);
-      console.log('rewardValue', rewardValue);
-
       resolve({
-        username: payload['sender']['login'],
+        username: body['sender']['login'],
         contributor: null,
         date: new Date().getTime(),
         delivery_id: headers['x-github-delivery'],
         eventType: eventType,
-        organization: payload['organization']['login'],
+        organization: body['organization']['login'],
         reservedValue: reservedValue,
         rewardValue: rewardValue,
         subEventType: subEventType

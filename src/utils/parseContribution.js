@@ -1,41 +1,43 @@
 
 
 
-export default function parseContribution({ headers, payload }) {
+export default function parseContribution({ headers, body }) {
   return  new Promise((resolve, reject) => {
     const eventType = headers['x-github-event']
 
-    const getSubEventType = ({ eventType, payload }) => {
+    const getSubEventType = ({ eventType, body }) => {
       switch(eventType) {
         case 'create':
-          return payload['ref_type']
+          return body['ref_type']
           break;
         case 'delete':
-          return payload['ref_type']
+          return body['ref_type']
           break;
         case 'deployment_status':
-          return payload['state']
+          return body['state']
           break;
         case 'gollum':
-          return payload['pages'][0]['action'] // Should this be reward for each gollum (wiki page touched)?
+          return body['pages'][0]['action'] // Should this be reward for each gollum (wiki page touched)?
           break;
         case 'page_build':
-          return payload['build']['status']
+          return body['build']['status']
           break;
         case 'pull_request':
-          return payload['pull_request']['merged'] ? payload['pull_request']['merged'] : payload['action'] // ternary => true ? 'a' : 'b'
+          return body['pull_request']['merged'] ? body['pull_request']['merged'] : body['action'] // ternary => true ? 'a' : 'b'
           break;
         case 'status':
-          return payload['state']
+          return body['state']
           break;
         case 'push':
           return ''
+        case 'ping':
+          return ''
         default:
-          return payload['action']
+          return body['action']
       }
     }
 
-    const subEventType = getSubEventType({ eventType, payload })
+    const subEventType = getSubEventType({ eventType, body })
 
     this.RewardPoints.getRewardDetails.callAsync(eventType, subEventType).then((data) => {
 
@@ -43,12 +45,12 @@ export default function parseContribution({ headers, payload }) {
       const reservedValue = data[1].toNumber()
 
       resolve({
-        username: payload['sender']['login'],
+        username: body['sender']['login'],
         contributor: null,
         date: new Date().getTime(),
         delivery_id: headers['x-github-delivery'],
         eventType,
-        organization: payload['organization']['login'],
+        organization: body['organization']['login'],
         reservedValue,
         rewardValue,
         subEventType

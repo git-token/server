@@ -27,6 +27,9 @@ const config = {
     symbol: process.env['GITTOKEN_CONTRACT_SYMBOL'],
     decimals: parseInt(process.env['GITTOKEN_CONTRACT_DECIMALS'])
   },
+  gitterWebHookUrl: process.env['GITTER_WEBHOOK_URL'],
+  gitterToken: process.env['GITTER_TOKEN'],
+  gitterRoomName: process.env['GITTER_ROOM_NAME'],
   githubCredentials: {
     clientID: process.env['GITHUB_API_ID'],
     clientSecret: process.env['GITHUB_API_SECRET'],

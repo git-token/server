@@ -36,15 +36,9 @@ var _bodyParser = require('body-parser');
 
 var _bodyParser2 = _interopRequireDefault(_bodyParser);
 
-var _passport = require('passport');
-
-var _passport2 = _interopRequireDefault(_passport);
-
 var _mysql = require('mysql');
 
 var _mysql2 = _interopRequireDefault(_mysql);
-
-var _passportGithub = require('passport-github2');
 
 var _index = require('./utils/index');
 
@@ -58,9 +52,10 @@ var _index5 = require('./routers/index');
 
 var _index6 = require('./middleware/index');
 
+var _index7 = require('./integrations/index');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-// import GitTokenKeystoreGenerator from 'gittoken-keystore-generator'
 var GitTokenServer = function (_GitTokenContracts) {
   (0, _inherits3.default)(GitTokenServer, _GitTokenContracts);
 
@@ -69,7 +64,11 @@ var GitTokenServer = function (_GitTokenContracts) {
         _ref$api = _ref.api,
         port = _ref$api.port,
         sessionSecret = _ref$api.sessionSecret,
+        gittokenParams = _ref.gittokenParams,
         githubCredentials = _ref.githubCredentials,
+        gitterWebHookUrl = _ref.gitterWebHookUrl,
+        gitterToken = _ref.gitterToken,
+        gitterRoomName = _ref.gitterRoomName,
         dirPath = _ref.dirPath,
         address = _ref.address,
         recoveryShare = _ref.recoveryShare,
@@ -80,20 +79,36 @@ var GitTokenServer = function (_GitTokenContracts) {
     var _this = (0, _possibleConstructorReturn3.default)(this, (GitTokenServer.__proto__ || (0, _getPrototypeOf2.default)(GitTokenServer)).call(this, { dirPath: dirPath, address: address, recoveryShare: recoveryShare, web3Provider: web3Provider }));
 
     _this.port = port;
+    _this.gittokenParams = gittokenParams;
     _this.githubCredentials = githubCredentials;
+    _this.gitterWebHookUrl = gitterWebHookUrl;
+    _this.gitterToken = gitterToken;
+    _this.gitterRoomName = gitterRoomName;
     _this.sessionSecret = sessionSecret;
     _this.web3Provider = web3Provider;
 
     /* Bind Methods */
     _this.AuthRouter = _index5.AuthRouter.bind(_this);
     _this.WebHookRouter = _index5.WebHookRouter.bind(_this);
+    _this.ApiRouter = _index5.ApiRouter.bind(_this);
     _this.WebHookMiddleware = _index6.WebHookMiddleware.bind(_this);
     _this.parseContribution = _index.parseContribution.bind(_this);
+    _this.validateWebHookRequest = _index.validateWebHookRequest.bind(_this);
     _this.signContribution = _index.signContribution.bind(_this);
     _this.query = _index4.query.bind(_this);
     _this.saveContribution = _index4.saveContribution.bind(_this);
     _this.saveUserBalance = _index4.saveUserBalance.bind(_this);
     _this.saveTotalSupply = _index4.saveTotalSupply.bind(_this);
+    _this.getContributions = _index4.getContributions.bind(_this);
+    _this.getTokenSupply = _index4.getTokenSupply.bind(_this);
+    _this.getUserBalances = _index4.getUserBalances.bind(_this);
+
+    /* Gitter WebHook Integration */
+    _this.gitterService = _index7.gitterService.bind(_this);
+
+    _this.gitterService();
+    _this.gitterWebHook = _index7.gitterWebHook.bind(_this);
+    _this.gitterLogContributionActivity = _index7.gitterLogContributionActivity.bind(_this);
 
     /* MySql Connection */
     _this.mysql = _mysql2.default.createConnection(mysqlOpts);
@@ -112,6 +127,7 @@ var GitTokenServer = function (_GitTokenContracts) {
 
     _this.app.use('/auth/', _this.AuthRouter());
     _this.app.use('/webhook/', _this.WebHookRouter());
+    _this.app.use('/api/', _this.ApiRouter());
 
     _this.app.use('/', function (req, res) {
       res.send('Hello, GitToken Server!');

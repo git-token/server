@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -8,29 +8,46 @@ function WebHookMiddleware(req, res, next) {
   var _this = this;
 
   var headers = req.headers,
-      payload = req.body.payload;
+      body = req.body;
 
 
-  this.parseContribution({ headers: headers, payload: JSON.parse(payload) }).then(function (contribution) {
+  this.validateWebHookRequest({ headers: headers, body: body }).then(function () {
 
-    console.log('contribution', contribution);
+    return _this.parseContribution({ headers: headers, body: body });
+  }).then(function (contribution) {
+
+    // console.log('contribution', contribution)
     return _this.signContribution(contribution);
   }).then(function (signedContribution) {
 
-    console.log('signedContribution', signedContribution);
+    // console.log('signedContribution', signedContribution)
     return _this.saveContribution(signedContribution);
   }).then(function (savedContribution) {
-    console.log('savedContribution', savedContribution);
+
+    // console.log('savedContribution', savedContribution)
     req.contribution = savedContribution;
     return _this.saveTotalSupply(req.contribution);
   }).then(function (totalSupply) {
+
     req.totalSupply = totalSupply;
     return _this.saveUserBalance(req.contribution);
   }).then(function (userBalance) {
+
     req.userBalance = userBalance;
+    if (!_this.gitterWebHookUrl) {
+      next();
+    } else {
+      return _this.gitterLogContributionActivity({
+        totalSupply: req.totalSupply,
+        userBalance: req.userBalance,
+        contribution: req.contribution
+      });
+    }
+  }).then(function () {
+    // Middleware Complete
     next();
   }).catch(function (error) {
-    console.log('error', error);
-    res.status(500).send(error.message);
+    var code = error.code ? error.code : 500;
+    res.status(code).send(error.message);
   });
 }
