@@ -18,9 +18,9 @@ const config = {
   web3Provider: process.env['WEB3_PROVIDER'],
   dirPath: process.env['GITTOKEN_DIRECTORY_PATH'],
   recoveryShare: process.env['GITTOKEN_RECOVERY_SHARE'],
-  address: process.env['GITTOKEN_ADDRESS'],
+  address: process.env['GITTOKEN_SIGNER_ADDRESS'],
   gittokenParams: {
-    contributor: process.env['GITTOKEN_CONTRACT_OWNER'],
+    owner: process.env['GITTOKEN_CONTRACT_OWNER'],
     name: process.env['GITTOKEN_CONTRACT_NAME'],
     username: process.env['GITTOKEN_CONTRACT_OWNER_USERNAME'],
     organization: process.env['GITTOKEN_CONTRACT_ORGANIZATION'],

@@ -50,9 +50,22 @@ function AuthRouter() {
     });
   });
 
+  router.get('/signer/address', function (req, res) {
+    if (!_this.address) {
+      var error = new Error("Signer Address is undefined.");
+      res.status(500).send(JSON.parse(error, null, 2));
+    } else {
+      res.status(200).send('0x' + _this.address);
+    }
+  });
+
   router.get('/signer/balance', function (req, res) {
     _this.eth.getBalanceAsync(_this.address).then(function (balance) {
-      res.status(200).send(balance.toNumber());
+
+      res.status(200).send({
+        weiBalance: balance.toNumber(),
+        ethBalance: balance.toNumber() / 1e18
+      });
     }).catch(function (error) {
       res.status(500).send(JSON.parse(error, null, 2));
     });

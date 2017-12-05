@@ -3,51 +3,36 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _stringify = require("babel-runtime/core-js/json/stringify");
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
 exports.default = WebHookMiddleware;
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function WebHookMiddleware(req, res, next) {
   var _this = this;
 
   var headers = req.headers,
       body = req.body;
 
-
   this.validateWebHookRequest({ headers: headers, body: body }).then(function () {
+    return _this.handleContribution({ headers: headers, body: body });
+  }).then(function (details) {
+    var contribution = details.contribution,
+        userBalance = details.userBalance,
+        totalSupply = details.totalSupply;
 
-    return _this.parseContribution({ headers: headers, body: body });
-  }).then(function (contribution) {
-
-    // console.log('contribution', contribution)
-    return _this.signContribution(contribution);
-  }).then(function (signedContribution) {
-
-    // console.log('signedContribution', signedContribution)
-    return _this.saveContribution(signedContribution);
-  }).then(function (savedContribution) {
-
-    // console.log('savedContribution', savedContribution)
-    req.contribution = savedContribution;
-    return _this.saveTotalSupply(req.contribution);
-  }).then(function (totalSupply) {
-
-    req.totalSupply = totalSupply;
-    return _this.saveUserBalance(req.contribution);
-  }).then(function (userBalance) {
-
+    req.contribution = contribution;
     req.userBalance = userBalance;
-    if (!_this.gitterWebHookUrl) {
-      next();
-    } else {
-      return _this.gitterLogContributionActivity({
-        totalSupply: req.totalSupply,
-        userBalance: req.userBalance,
-        contribution: req.contribution
-      });
-    }
-  }).then(function () {
-    // Middleware Complete
+    req.totalSupply = totalSupply;
+    return _this.handleEventActions({ contribution: contribution });
+  }).then(function (events) {
+    req.events = events;
     next();
   }).catch(function (error) {
-    var code = error.code ? error.code : 500;
-    res.status(code).send(error.message);
+    res.status(500).send((0, _stringify2.default)(error, null, 2));
   });
 }

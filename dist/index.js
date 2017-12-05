@@ -40,19 +40,21 @@ var _mysql = require('mysql');
 
 var _mysql2 = _interopRequireDefault(_mysql);
 
-var _index = require('./utils/index');
+var _index = require('./events/index');
 
-var _index2 = require('./contracts/index');
+var _index2 = require('./utils/index');
 
-var _index3 = _interopRequireDefault(_index2);
+var _index3 = require('./contracts/index');
 
-var _index4 = require('./mysql/index');
+var _index4 = _interopRequireDefault(_index3);
 
-var _index5 = require('./routers/index');
+var _index5 = require('./mysql/index');
 
-var _index6 = require('./middleware/index');
+var _index6 = require('./routers/index');
 
-var _index7 = require('./integrations/index');
+var _index7 = require('./middleware/index');
+
+var _index8 = require('./integrations/index');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -88,27 +90,31 @@ var GitTokenServer = function (_GitTokenContracts) {
     _this.web3Provider = web3Provider;
 
     /* Bind Methods */
-    _this.AuthRouter = _index5.AuthRouter.bind(_this);
-    _this.WebHookRouter = _index5.WebHookRouter.bind(_this);
-    _this.ApiRouter = _index5.ApiRouter.bind(_this);
-    _this.WebHookMiddleware = _index6.WebHookMiddleware.bind(_this);
-    _this.parseContribution = _index.parseContribution.bind(_this);
-    _this.validateWebHookRequest = _index.validateWebHookRequest.bind(_this);
-    _this.signContribution = _index.signContribution.bind(_this);
-    _this.query = _index4.query.bind(_this);
-    _this.saveContribution = _index4.saveContribution.bind(_this);
-    _this.saveUserBalance = _index4.saveUserBalance.bind(_this);
-    _this.saveTotalSupply = _index4.saveTotalSupply.bind(_this);
-    _this.getContributions = _index4.getContributions.bind(_this);
-    _this.getTokenSupply = _index4.getTokenSupply.bind(_this);
-    _this.getUserBalances = _index4.getUserBalances.bind(_this);
+    _this.AuthRouter = _index6.AuthRouter.bind(_this);
+    _this.WebHookRouter = _index6.WebHookRouter.bind(_this);
+    _this.ApiRouter = _index6.ApiRouter.bind(_this);
+    _this.WebHookMiddleware = _index7.WebHookMiddleware.bind(_this);
+    _this.parseContribution = _index2.parseContribution.bind(_this);
+    _this.validateWebHookRequest = _index2.validateWebHookRequest.bind(_this);
+    _this.signContribution = _index2.signContribution.bind(_this);
+    _this.query = _index5.query.bind(_this);
+    _this.saveContribution = _index5.saveContribution.bind(_this);
+    _this.saveUserBalance = _index5.saveUserBalance.bind(_this);
+    _this.saveTotalSupply = _index5.saveTotalSupply.bind(_this);
+    _this.getContributions = _index5.getContributions.bind(_this);
+    _this.getTokenSupply = _index5.getTokenSupply.bind(_this);
+    _this.getUserBalances = _index5.getUserBalances.bind(_this);
+
+    _this.handleContribution = _index2.handleContribution.bind(_this);
+    _this.handleEventActions = _index2.handleEventActions.bind(_this);
+    _this.handlePingEvent = _index.handlePingEvent.bind(_this);
 
     /* Gitter WebHook Integration */
-    _this.gitterService = _index7.gitterService.bind(_this);
+    _this.gitterService = _index8.gitterService.bind(_this);
 
     _this.gitterService();
-    _this.gitterWebHook = _index7.gitterWebHook.bind(_this);
-    _this.gitterLogContributionActivity = _index7.gitterLogContributionActivity.bind(_this);
+    _this.gitterWebHook = _index8.gitterWebHook.bind(_this);
+    _this.gitterLogContributionActivity = _index8.gitterLogContributionActivity.bind(_this);
 
     /* MySql Connection */
     _this.mysql = _mysql2.default.createConnection(mysqlOpts);
@@ -155,6 +161,6 @@ var GitTokenServer = function (_GitTokenContracts) {
     }
   }]);
   return GitTokenServer;
-}(_index3.default);
+}(_index4.default);
 
 exports.default = GitTokenServer;

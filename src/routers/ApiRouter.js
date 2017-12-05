@@ -49,8 +49,11 @@ export default function AuthRouter() {
 
   router.get('/signer/balance', (req, res) => {
     this.eth.getBalanceAsync(this.address).then((balance) => {
-      console.log('balance', balance)
-      res.status(200).send(balance)
+
+      res.status(200).send({
+        weiBalance: balance.toNumber(),
+        ethBalance: balance.toNumber()/1e18,
+      })
     }).catch((error) => {
       res.status(500).send(JSON.parse(error, null, 2))
     })

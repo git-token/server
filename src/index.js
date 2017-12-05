@@ -3,11 +3,16 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import mysql from 'mysql'
 
+import {
+  handlePingEvent
+} from './events/index'
 
 import {
   signContribution,
   parseContribution,
-  validateWebHookRequest
+  validateWebHookRequest,
+  handleContribution,
+  handleEventActions
 } from './utils/index'
 
 import GitTokenContracts from './contracts/index'
@@ -78,6 +83,10 @@ export default class GitTokenServer extends GitTokenContracts {
     this.getContributions = getContributions.bind(this)
     this.getTokenSupply = getTokenSupply.bind(this)
     this.getUserBalances = getUserBalances.bind(this)
+
+    this.handleContribution = handleContribution.bind(this)
+    this.handleEventActions = handleEventActions.bind(this)
+    this.handlePingEvent = handlePingEvent.bind(this)
 
 
     /* Gitter WebHook Integration */
