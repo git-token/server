@@ -131,13 +131,17 @@ var GitTokenServer = function (_GitTokenContracts) {
     _this.app.use(_bodyParser2.default.json()); // handle json data
     _this.app.use(_bodyParser2.default.urlencoded({ extended: true })); // handle
 
+    _this.app.use('/api/', _this.ApiRouter());
     _this.app.use('/auth/', _this.AuthRouter());
     _this.app.use('/webhook/', _this.WebHookRouter());
-    _this.app.use('/api/', _this.ApiRouter());
 
-    _this.app.use('/', function (req, res) {
-      res.send('Hello, GitToken Server!');
-    });
+    // Serve Web Applications
+    _this.app.use('/registry', _express2.default.static(process.cwd() + '/node_modules/gittoken-registry-ui/'));
+    _this.app.use('/', _express2.default.static(process.cwd() + '/node_modules/gittoken-landing-page/'));
+
+    // this.app.use('/', (req, res) => {
+    //   res.send(`Hello, GitToken Server!`)
+    // })
 
     /* Run GitToken Server */
     _this.listen();

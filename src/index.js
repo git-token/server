@@ -30,7 +30,8 @@ import {
 import {
   AuthRouter,
   WebHookRouter,
-  ApiRouter
+  ApiRouter,
+  AccountRouter
 } from './routers/index'
 
 import {
@@ -72,6 +73,7 @@ export default class GitTokenServer extends GitTokenContracts {
     this.AuthRouter = AuthRouter.bind(this)
     this.WebHookRouter = WebHookRouter.bind(this)
     this.ApiRouter = ApiRouter.bind(this)
+    this.AccountRouter = AccountRouter.bind(this)
     this.WebHookMiddleware = WebHookMiddleware.bind(this)
     this.parseContribution = parseContribution.bind(this)
     this.validateWebHookRequest = validateWebHookRequest.bind(this)
@@ -112,13 +114,18 @@ export default class GitTokenServer extends GitTokenContracts {
     this.app.use(bodyParser.json()) // handle json data
     this.app.use(bodyParser.urlencoded({ extended: true })) // handle
 
+    this.app.use('/api/', this.ApiRouter());
     this.app.use('/auth/', this.AuthRouter());
     this.app.use('/webhook/', this.WebHookRouter());
-    this.app.use('/api/', this.ApiRouter());
+    this.app.use('/account', this.AccountRouter());
 
-    this.app.use('/', (req, res) => {
-      res.send(`Hello, GitToken Server!`)
-    })
+    // Serve Web Applications
+    this.app.use('/registry', express.static(`${process.cwd()}/node_modules/gittoken-registry-ui/`))
+
+
+    this.app.use('/', express.static(`${process.cwd()}/node_modules/gittoken-landing-page/`))
+
+
 
     /* Run GitToken Server */
     this.listen()

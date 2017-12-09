@@ -1,5 +1,7 @@
 import Promise from 'bluebird'
 
+// TODO Better security validation
+// 
 export default function validateWebHookRequest({ headers, body }) {
   return new Promise((resolve, reject) => {
     if (!headers['user-agent'].match(RegExp('GitHub-Hookshot'))) {

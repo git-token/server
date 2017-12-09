@@ -11,6 +11,8 @@ var _bluebird2 = _interopRequireDefault(_bluebird);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// TODO Better security validation
+// 
 function validateWebHookRequest(_ref) {
   var headers = _ref.headers,
       body = _ref.body;

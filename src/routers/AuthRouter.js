@@ -28,7 +28,7 @@ export default function AuthRouter() {
   router.get('/github/callback',
     this.passport.authenticate('github', { failureRedirect: '/' }),
     (req, res) => {
-      res.redirect('/')
+      res.redirect('/account')
     })
 
   router.get('/verify/:address', (req, res) => {

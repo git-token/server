@@ -27,13 +27,15 @@ export default function handlePingEvent() {
       contract: this.GitToken,
       params: [
         organization,
-        name, 
+        name,
         symbol,
         decimals,
         owner,
         username
       ]
     }).then((txReceipt) => {
+      // save the receipts;
+      console.log('txReceipt', txReceipt)
       resolve(txReceipt)
     }).catch((error) => {
       reject(error)

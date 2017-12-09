@@ -59,5 +59,14 @@ export default function AuthRouter() {
     })
   })
 
+  router.get('/profile', (req, res) => {
+    try {
+      const { session: { passport: { user: { profile } } } } = req
+      res.status(200).send(profile)
+    } catch (error) {
+      res.status(500).send(error)
+    }
+  })
+
   return router
 }

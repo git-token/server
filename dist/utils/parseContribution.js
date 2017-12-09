@@ -75,7 +75,6 @@ function parseContribution(_ref) {
         subEventType: subEventType
       });
     }).catch(function (error) {
-      console.log('error', error);
       reject(error);
     });
   });

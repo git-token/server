@@ -2,5 +2,4 @@
 /parity/keys/*
 /keystore/*
 node_modules
-gittoken.env
-mysql.env
+*.env

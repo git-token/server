@@ -12,6 +12,8 @@ export default function WebHookMiddleware(req, res, next) {
     req.events = events
     next()
   }).catch((error) => {
-    res.status(500).send(JSON.stringify(error, null, 2))
+    console.log('error', error)
+    const err = error.message ? error.message : JSON.stringify(error, null, 2)
+    res.status(500).send(err)
   })
 }

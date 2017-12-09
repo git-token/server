@@ -23,12 +23,12 @@ function handleEventActions(_ref) {
 
     _bluebird2.default.resolve().then(function () {
       if (eventType == "ping") {
-        return _this.handlePingEvent();
+        return (0, _bluebird.join)(_this.handlePingEvent());
       } else {
         return null;
       }
-    }).then(function (events) {
-      resolve(events);
+    }).then(function (receipts) {
+      resolve(receipts);
     }).catch(function (error) {
       reject(error);
     });

@@ -20,13 +20,20 @@ function WebHookRouter() {
   router.post('/', this.WebHookMiddleware, function (req, res) {
     var contribution = req.contribution,
         totalSupply = req.totalSupply,
-        userBalance = req.userBalance;
+        userBalance = req.userBalance,
+        receipts = req.receipts;
 
-    res.status(200).send((0, _stringify2.default)({
+
+    var details = (0, _stringify2.default)({
       contribution: contribution,
       userBalance: userBalance,
-      totalSupply: totalSupply
-    }, null, 2));
+      totalSupply: totalSupply,
+      receipts: receipts
+    }, null, 2);
+
+    console.log('details', details);
+
+    res.status(200).send(details);
   });
 
   return router;

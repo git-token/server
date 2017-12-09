@@ -8,7 +8,7 @@ import GitToken from 'gittoken-contracts/build/contracts/GitToken.json'
 export default class GitTokenContracts extends GitTokenKeystoreGenerator {
   constructor(options) {
     super(options)
-    // Instantiate Pre-Deployed Contract Data
+    // Instantiate Contract Data
     this.GitToken = GitToken;
 
     // Instantiate Deployed Contracts

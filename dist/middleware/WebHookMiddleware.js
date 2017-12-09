@@ -1,10 +1,10 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _stringify = require("babel-runtime/core-js/json/stringify");
+var _stringify = require('babel-runtime/core-js/json/stringify');
 
 var _stringify2 = _interopRequireDefault(_stringify);
 
@@ -33,6 +33,8 @@ function WebHookMiddleware(req, res, next) {
     req.events = events;
     next();
   }).catch(function (error) {
-    res.status(500).send((0, _stringify2.default)(error, null, 2));
+    console.log('error', error);
+    var err = error.message ? error.message : (0, _stringify2.default)(error, null, 2);
+    res.status(500).send(err);
   });
 }

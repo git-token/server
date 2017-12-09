@@ -40,6 +40,8 @@ function handlePingEvent() {
       contract: _this.GitToken,
       params: [organization, name, symbol, decimals, owner, username]
     }).then(function (txReceipt) {
+      // save the receipts;
+      console.log('txReceipt', txReceipt);
       resolve(txReceipt);
     }).catch(function (error) {
       reject(error);

@@ -1,6 +1,3 @@
-
-
-
 export default function parseContribution({ headers, body }) {
   return  new Promise((resolve, reject) => {
     const eventType = headers['x-github-event']
@@ -56,7 +53,6 @@ export default function parseContribution({ headers, body }) {
         subEventType
       })
     }).catch((error) => {
-      console.log('error', error)
       reject(error)
     })
   })

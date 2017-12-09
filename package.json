@@ -26,6 +26,8 @@
     "express-session": "^1.15.3",
     "gittoken-contracts": "0.0.59",
     "gittoken-keystore-generator": "0.0.20",
+    "gittoken-landing-page": "0.0.4",
+    "gittoken-registry-ui": "0.0.13",
     "graphql": "^0.10.4",
     "keccak": "^1.3.0",
     "keythereum": "^1.0.1",
@@ -34,6 +36,8 @@
     "passport": "^0.3.2",
     "passport-github": "^1.1.0",
     "passport-github2": "^0.1.11",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "request": "^2.83.0",
     "request-promise": "^4.2.2",
     "web3": "^0.20.2"

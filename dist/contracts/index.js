@@ -50,7 +50,7 @@ var GitTokenContracts = function (_GitTokenKeystoreGene) {
   function GitTokenContracts(options) {
     (0, _classCallCheck3.default)(this, GitTokenContracts);
 
-    // Instantiate Pre-Deployed Contract Data
+    // Instantiate Contract Data
     var _this = (0, _possibleConstructorReturn3.default)(this, (GitTokenContracts.__proto__ || (0, _getPrototypeOf2.default)(GitTokenContracts)).call(this, options));
 
     _this.GitToken = GitToken;
