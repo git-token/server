@@ -15,6 +15,10 @@ import {
   handleEventActions
 } from './utils/index'
 
+import {
+  createOrgWebHook
+} from './github/index'
+
 import GitTokenContracts from './contracts/index'
 
 import {
@@ -89,6 +93,7 @@ export default class GitTokenServer extends GitTokenContracts {
     this.handleContribution = handleContribution.bind(this)
     this.handleEventActions = handleEventActions.bind(this)
     this.handlePingEvent = handlePingEvent.bind(this)
+    this.createOrgWebHook = createOrgWebHook.bind(this)
 
 
     /* Gitter WebHook Integration */
@@ -121,10 +126,7 @@ export default class GitTokenServer extends GitTokenContracts {
 
     // Serve Web Applications
     this.app.use('/registry', express.static(`${process.cwd()}/node_modules/gittoken-registry-ui/`))
-
-
     this.app.use('/', express.static(`${process.cwd()}/node_modules/gittoken-landing-page/`))
-
 
 
     /* Run GitToken Server */

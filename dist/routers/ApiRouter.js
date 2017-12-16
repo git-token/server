@@ -71,5 +71,23 @@ function AuthRouter() {
     });
   });
 
+  router.get('/profile', function (req, res) {
+    try {
+      var profile = req.session.passport.user.profile;
+
+      res.status(200).send(profile);
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  });
+
+  router.post('/register', function (req, res) {
+    _this.createOrgWebHook({ req: req }).then(function (result) {
+      res.status(200).send(result);
+    }).catch(function (error) {
+      res.status(500).send(error);
+    });
+  });
+
   return router;
 }

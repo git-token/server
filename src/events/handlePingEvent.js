@@ -35,7 +35,6 @@ export default function handlePingEvent() {
       ]
     }).then((txReceipt) => {
       // save the receipts;
-      console.log('txReceipt', txReceipt)
       resolve(txReceipt)
     }).catch((error) => {
       reject(error)

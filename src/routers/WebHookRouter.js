@@ -5,19 +5,13 @@ export default function WebHookRouter() {
 
   router.post('/', this.WebHookMiddleware, (req, res) => {
     const { contribution, totalSupply, userBalance, receipts } = req
-
     const details = JSON.stringify({
       contribution,
       userBalance,
       totalSupply,
       receipts
     }, null, 2)
-
-    console.log('details', details)
-
     res.status(200).send(details)
   })
-
-
   return router
 }

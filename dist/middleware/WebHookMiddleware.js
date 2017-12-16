@@ -29,8 +29,10 @@ function WebHookMiddleware(req, res, next) {
     req.userBalance = userBalance;
     req.totalSupply = totalSupply;
     return _this.handleEventActions({ contribution: contribution });
-  }).then(function (events) {
-    req.events = events;
+  }).then(function (receipts) {
+    // Expect receipts to be an [] of txReceipts
+    req.receipts = receipts;
+    // Save Receipts to SQL table
     next();
   }).catch(function (error) {
     console.log('error', error);

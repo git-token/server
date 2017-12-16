@@ -23,18 +23,13 @@ function WebHookRouter() {
         userBalance = req.userBalance,
         receipts = req.receipts;
 
-
     var details = (0, _stringify2.default)({
       contribution: contribution,
       userBalance: userBalance,
       totalSupply: totalSupply,
       receipts: receipts
     }, null, 2);
-
-    console.log('details', details);
-
     res.status(200).send(details);
   });
-
   return router;
 }

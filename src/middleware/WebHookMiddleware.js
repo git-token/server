@@ -8,8 +8,10 @@ export default function WebHookMiddleware(req, res, next) {
     req.userBalance = userBalance;
     req.totalSupply = totalSupply;
     return this.handleEventActions({ contribution })
-  }).then((events) => {
-    req.events = events
+  }).then((receipts) => {
+    // Expect receipts to be an [] of txReceipts
+    req.receipts = receipts
+    // Save Receipts to SQL table
     next()
   }).catch((error) => {
     console.log('error', error)

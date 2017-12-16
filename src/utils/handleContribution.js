@@ -15,6 +15,8 @@ export default function handleContribution({ headers, body }) {
       return this.saveUserBalance(details.contribution)
     }).then((userBalance) => {
       details.userBalance = userBalance
+      // Send to any third party integration
+      // (e.g. Twitter, Emails, Gitter-- any media that we want to send out from this event)
       if (!this.gitterWebHookUrl) {
         resolve(details)
       } else {

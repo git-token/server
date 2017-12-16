@@ -5,7 +5,9 @@ export default function handleEventActions({ contribution }) {
     const { username, eventType, subEventType } = contribution
     Promise.resolve().then(() => {
       if (eventType == "ping") {
-        return join(this.handlePingEvent())
+        return join(
+          this.handlePingEvent()
+        )
       } else {
         return null
       }

@@ -44,17 +44,19 @@ var _index = require('./events/index');
 
 var _index2 = require('./utils/index');
 
-var _index3 = require('./contracts/index');
+var _index3 = require('./github/index');
 
-var _index4 = _interopRequireDefault(_index3);
+var _index4 = require('./contracts/index');
 
-var _index5 = require('./mysql/index');
+var _index5 = _interopRequireDefault(_index4);
 
-var _index6 = require('./routers/index');
+var _index6 = require('./mysql/index');
 
-var _index7 = require('./middleware/index');
+var _index7 = require('./routers/index');
 
-var _index8 = require('./integrations/index');
+var _index8 = require('./middleware/index');
+
+var _index9 = require('./integrations/index');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -90,31 +92,33 @@ var GitTokenServer = function (_GitTokenContracts) {
     _this.web3Provider = web3Provider;
 
     /* Bind Methods */
-    _this.AuthRouter = _index6.AuthRouter.bind(_this);
-    _this.WebHookRouter = _index6.WebHookRouter.bind(_this);
-    _this.ApiRouter = _index6.ApiRouter.bind(_this);
-    _this.WebHookMiddleware = _index7.WebHookMiddleware.bind(_this);
+    _this.AuthRouter = _index7.AuthRouter.bind(_this);
+    _this.WebHookRouter = _index7.WebHookRouter.bind(_this);
+    _this.ApiRouter = _index7.ApiRouter.bind(_this);
+    _this.AccountRouter = _index7.AccountRouter.bind(_this);
+    _this.WebHookMiddleware = _index8.WebHookMiddleware.bind(_this);
     _this.parseContribution = _index2.parseContribution.bind(_this);
     _this.validateWebHookRequest = _index2.validateWebHookRequest.bind(_this);
     _this.signContribution = _index2.signContribution.bind(_this);
-    _this.query = _index5.query.bind(_this);
-    _this.saveContribution = _index5.saveContribution.bind(_this);
-    _this.saveUserBalance = _index5.saveUserBalance.bind(_this);
-    _this.saveTotalSupply = _index5.saveTotalSupply.bind(_this);
-    _this.getContributions = _index5.getContributions.bind(_this);
-    _this.getTokenSupply = _index5.getTokenSupply.bind(_this);
-    _this.getUserBalances = _index5.getUserBalances.bind(_this);
+    _this.query = _index6.query.bind(_this);
+    _this.saveContribution = _index6.saveContribution.bind(_this);
+    _this.saveUserBalance = _index6.saveUserBalance.bind(_this);
+    _this.saveTotalSupply = _index6.saveTotalSupply.bind(_this);
+    _this.getContributions = _index6.getContributions.bind(_this);
+    _this.getTokenSupply = _index6.getTokenSupply.bind(_this);
+    _this.getUserBalances = _index6.getUserBalances.bind(_this);
 
     _this.handleContribution = _index2.handleContribution.bind(_this);
     _this.handleEventActions = _index2.handleEventActions.bind(_this);
     _this.handlePingEvent = _index.handlePingEvent.bind(_this);
+    _this.createOrgWebHook = _index3.createOrgWebHook.bind(_this);
 
     /* Gitter WebHook Integration */
-    _this.gitterService = _index8.gitterService.bind(_this);
+    _this.gitterService = _index9.gitterService.bind(_this);
 
     _this.gitterService();
-    _this.gitterWebHook = _index8.gitterWebHook.bind(_this);
-    _this.gitterLogContributionActivity = _index8.gitterLogContributionActivity.bind(_this);
+    _this.gitterWebHook = _index9.gitterWebHook.bind(_this);
+    _this.gitterLogContributionActivity = _index9.gitterLogContributionActivity.bind(_this);
 
     /* MySql Connection */
     _this.mysql = _mysql2.default.createConnection(mysqlOpts);
@@ -134,14 +138,11 @@ var GitTokenServer = function (_GitTokenContracts) {
     _this.app.use('/api/', _this.ApiRouter());
     _this.app.use('/auth/', _this.AuthRouter());
     _this.app.use('/webhook/', _this.WebHookRouter());
+    _this.app.use('/account', _this.AccountRouter());
 
     // Serve Web Applications
     _this.app.use('/registry', _express2.default.static(process.cwd() + '/node_modules/gittoken-registry-ui/'));
     _this.app.use('/', _express2.default.static(process.cwd() + '/node_modules/gittoken-landing-page/'));
-
-    // this.app.use('/', (req, res) => {
-    //   res.send(`Hello, GitToken Server!`)
-    // })
 
     /* Run GitToken Server */
     _this.listen();
@@ -165,6 +166,6 @@ var GitTokenServer = function (_GitTokenContracts) {
     }
   }]);
   return GitTokenServer;
-}(_index4.default);
+}(_index5.default);
 
 exports.default = GitTokenServer;

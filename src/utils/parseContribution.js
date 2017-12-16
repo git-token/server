@@ -36,6 +36,7 @@ export default function parseContribution({ headers, body }) {
 
     const subEventType = getSubEventType({ eventType, body })
 
+    // NOTE: Consider saving the reward points in memory instead of calling the contract for the reward details
     this.RewardPoints.getRewardDetails.callAsync(eventType, subEventType).then((data) => {
 
       const rewardValue = data[0].toNumber()

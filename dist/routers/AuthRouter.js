@@ -37,7 +37,7 @@ function AuthRouter() {
 
   router.get('/github', this.passport.authenticate('github'));
   router.get('/github/callback', this.passport.authenticate('github', { failureRedirect: '/' }), function (req, res) {
-    res.redirect('/');
+    res.redirect('/account');
   });
 
   router.get('/verify/:address', function (req, res) {

@@ -58,6 +58,7 @@ function parseContribution(_ref) {
 
     var subEventType = getSubEventType({ eventType: eventType, body: body });
 
+    // NOTE: Consider saving the reward points in memory instead of calling the contract for the reward details
     _this.RewardPoints.getRewardDetails.callAsync(eventType, subEventType).then(function (data) {
 
       var rewardValue = data[0].toNumber();
