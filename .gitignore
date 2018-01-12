@@ -3,3 +3,8 @@
 /keystore/*
 node_modules
 *.env
+*.log
+.idea
+package-lock.json
+gittoken-server
+/dist

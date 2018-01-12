@@ -37,6 +37,7 @@ export default function saveUserDetails({
     }).then((details) => {
       resolve(details[0])
     }).catch((error) => {
+      console.log(error);
       reject(error)
     })
   })
