@@ -17,7 +17,7 @@ import Welcome from './Welcome'
 import RegisterAccount from './RegisterAccount'
 import MetaMask from './MetaMask'
 import SetupOrganization from './SetupOrganization'
-import TermsOfService from 'gittoken-react-components/dist/components/Legal/TermsOfService'
+import TermsOfService from './TermsOfService'
 
 class MainComponent extends Component {
   constructor() {
@@ -30,7 +30,12 @@ class MainComponent extends Component {
 
 
     // NOTE: The following sets the activeStep for the sidenav
-    const path = location.pathname.replace('/account/setup/', '')
+    const path = location.pathname
+      .replace('/account/setup/', '')
+      .replace('/account/setup', '')
+      .replace('/setup/', '')
+      .replace('/setup', '')
+
     const activeStep = path.length ? path : 'welcome'
 
     dispatch({

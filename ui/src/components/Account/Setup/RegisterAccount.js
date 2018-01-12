@@ -15,6 +15,16 @@ class RegisterAccountComponent extends Component {
     super()
   }
 
+  componentDidMount() {
+    const { dispatch } = this.props
+
+    dispatch({
+      type: 'SET_ACCOUNT_SETUP_DETAILS',
+      id: 'activeStep',
+      value: 'register'
+    })
+  }
+
   verify() {
     const {
       dispatch,
