@@ -1,6 +1,6 @@
 import { Router } from 'express'
 
-export default function AuthRouter() {
+export default function ApiRouter() {
   let router = Router()
 
   router.get('/contributions/:username?', (req, res) => {
@@ -59,13 +59,56 @@ export default function AuthRouter() {
     })
   })
 
-  router.get('/profile', (req, res) => {
-    try {
-      const { session: { passport: { user: { profile } } } } = req
-      res.status(200).send(profile)
-    } catch (error) {
-      res.status(500).send(error)
+  router.get('/account/profile', (req, res) => {
+    const { session: { passport } } = req
+
+    if (passport && passport['user']) {
+      try {
+        const { user: { profile } } = passport
+        res.status(200).send(profile)
+      } catch (error) {
+        res.status(500).send(error)
+      }
+    } else {
+      res.status(401).send(false)
     }
+  })
+
+  router.get('/account/verified', (req, res) => {
+    const { session: { passport } } = req
+
+    if (passport && passport['user']) {
+      const { user: { profile: { username } } } = passport
+      this.getEndUserLicenseAgreement({ username }).then((eula) => {
+        const verified = !eula ? false : true
+        res.status(200).send(verified)
+      }).catch((error) => {
+        res.status(500).send(error)
+      })
+    } else {
+      res.status(401).send(false)
+    }
+  })
+
+  router.get('/account/organizations', (req, res) => {
+    const { session: { passport } } = req
+
+    if (passport && passport['user']) {
+      const { user: { accessToken, profile: { username } } } = passport
+        this.getOrganizations({ accessToken, username }).then((organizations) => {
+          res.status(200).send(organizations)
+        }).catch((error) => {
+          console.log('error', error)
+          res.status(500).send(error)
+        })
+
+    } else {
+      res.status(401).send(false)
+    }
+  })
+
+  router.post('/account/verify', this.VerifyAccountMiddleware, (req, res) => {
+    res.status(200).send(true)
   })
 
   router.post('/register', (req, res) => {

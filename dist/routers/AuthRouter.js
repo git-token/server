@@ -36,24 +36,27 @@ function AuthRouter() {
   router.use(this.passport.session());
 
   router.get('/github', this.passport.authenticate('github'));
-  router.get('/github/callback', this.passport.authenticate('github', { failureRedirect: '/' }), function (req, res) {
-    res.redirect('/account');
+  router.get('/github/callback', this.passport.authenticate('github', { failureRedirect: '/' }), this.SaveUserMiddleware, function (req, res) {
+    res.redirect('/');
   });
 
-  router.get('/verify/:address', function (req, res) {
-    var passport = req.session.passport,
-        address = req.params.address;
-
-
-    if (!passport || !passport['user']) {
-      res.redirect('/auth/github');
-    } else {
-      var username = req.user.profile.username;
-
-
-      res.send('\n        Authenticating GitToken Contributor Address, ' + address + ',\n        with GitHub User, ' + username + '\n      ');
-    }
-  });
+  // router.get('/verify/:address', (req, res) => {
+  //   const {
+  //     session: { passport },
+  //     params: { address }
+  //   } = req
+  //
+  //   if (!passport || !passport['user']) {
+  //     res.redirect('/auth/github')
+  //   } else {
+  //     const { user: { profile: { username } } } = req
+  //
+  //     res.send(`
+  //       Authenticating GitToken Contributor Address, ${address},
+  //       with GitHub User, ${username}
+  //     `)
+  //   }
+  // })
 
   return router;
 }

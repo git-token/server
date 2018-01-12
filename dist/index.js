@@ -92,26 +92,34 @@ var GitTokenServer = function (_GitTokenContracts) {
     _this.web3Provider = web3Provider;
 
     /* Bind Methods */
+    _this.query = _index6.query.bind(_this);
     _this.AuthRouter = _index7.AuthRouter.bind(_this);
     _this.WebHookRouter = _index7.WebHookRouter.bind(_this);
     _this.ApiRouter = _index7.ApiRouter.bind(_this);
     _this.AccountRouter = _index7.AccountRouter.bind(_this);
     _this.WebHookMiddleware = _index8.WebHookMiddleware.bind(_this);
+    _this.SaveUserMiddleware = _index8.SaveUserMiddleware.bind(_this);
+    _this.VerifyAccountMiddleware = _index8.VerifyAccountMiddleware.bind(_this);
     _this.parseContribution = _index2.parseContribution.bind(_this);
     _this.validateWebHookRequest = _index2.validateWebHookRequest.bind(_this);
     _this.signContribution = _index2.signContribution.bind(_this);
-    _this.query = _index6.query.bind(_this);
     _this.saveContribution = _index6.saveContribution.bind(_this);
     _this.saveUserBalance = _index6.saveUserBalance.bind(_this);
     _this.saveTotalSupply = _index6.saveTotalSupply.bind(_this);
     _this.getContributions = _index6.getContributions.bind(_this);
     _this.getTokenSupply = _index6.getTokenSupply.bind(_this);
     _this.getUserBalances = _index6.getUserBalances.bind(_this);
+    _this.saveUserDetails = _index6.saveUserDetails.bind(_this);
+    _this.getUserDetails = _index6.getUserDetails.bind(_this);
+    _this.saveEndUserLicenseAgreement = _index6.saveEndUserLicenseAgreement.bind(_this);
+    _this.getEndUserLicenseAgreement = _index6.getEndUserLicenseAgreement.bind(_this);
+    _this.updateUserAddress = _index6.updateUserAddress.bind(_this);
 
     _this.handleContribution = _index2.handleContribution.bind(_this);
     _this.handleEventActions = _index2.handleEventActions.bind(_this);
     _this.handlePingEvent = _index.handlePingEvent.bind(_this);
     _this.createOrgWebHook = _index3.createOrgWebHook.bind(_this);
+    _this.getOrganizations = _index3.getOrganizations.bind(_this);
 
     /* Gitter WebHook Integration */
     _this.gitterService = _index9.gitterService.bind(_this);
@@ -135,14 +143,18 @@ var GitTokenServer = function (_GitTokenContracts) {
     _this.app.use(_bodyParser2.default.json()); // handle json data
     _this.app.use(_bodyParser2.default.urlencoded({ extended: true })); // handle
 
+
     _this.app.use('/api/', _this.ApiRouter());
     _this.app.use('/auth/', _this.AuthRouter());
     _this.app.use('/webhook/', _this.WebHookRouter());
-    _this.app.use('/account', _this.AccountRouter());
+    // this.app.use('/account', this.AccountRouter());
 
-    // Serve Web Applications
-    _this.app.use('/registry', _express2.default.static(process.cwd() + '/node_modules/gittoken-registry-ui/'));
-    _this.app.use('/', _express2.default.static(process.cwd() + '/node_modules/gittoken-landing-page/'));
+    // Serve Web Application UI
+    _this.app.use('/', _express2.default.static(process.cwd() + '/ui/'));
+
+    _this.app.use(function (req, res) {
+      res.redirect('/');
+    });
 
     /* Run GitToken Server */
     _this.listen();

@@ -4,6 +4,11 @@ import saveTotalSupply from './saveTotalSupply'
 import getContributions from './getContributions'
 import getTokenSupply from './getTokenSupply'
 import getUserBalances from './getUserBalances'
+import saveUserDetails from './saveUserDetails'
+import getUserDetails from './getUserDetails'
+import saveEndUserLicenseAgreement from './saveEndUserLicenseAgreement'
+import getEndUserLicenseAgreement from './getEndUserLicenseAgreement'
+import updateUserAddress from './updateUserAddress'
 import query from './query'
 
 export {
@@ -13,5 +18,10 @@ export {
   getContributions,
   getTokenSupply,
   getUserBalances,
-  query
+  query,
+  saveUserDetails,
+  getUserDetails,
+  saveEndUserLicenseAgreement,
+  getEndUserLicenseAgreement,
+  updateUserAddress
 }

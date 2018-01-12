@@ -3,11 +3,11 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = AuthRouter;
+exports.default = ApiRouter;
 
 var _express = require('express');
 
-function AuthRouter() {
+function ApiRouter() {
   var _this = this;
 
   var router = (0, _express.Router)();
@@ -71,14 +71,63 @@ function AuthRouter() {
     });
   });
 
-  router.get('/profile', function (req, res) {
-    try {
-      var profile = req.session.passport.user.profile;
+  router.get('/account/profile', function (req, res) {
+    var passport = req.session.passport;
 
-      res.status(200).send(profile);
-    } catch (error) {
-      res.status(500).send(error);
+
+    if (passport && passport['user']) {
+      try {
+        var profile = passport.user.profile;
+
+        res.status(200).send(profile);
+      } catch (error) {
+        res.status(500).send(error);
+      }
+    } else {
+      res.status(401).send(false);
     }
+  });
+
+  router.get('/account/verified', function (req, res) {
+    var passport = req.session.passport;
+
+
+    if (passport && passport['user']) {
+      var username = passport.user.profile.username;
+
+      _this.getEndUserLicenseAgreement({ username: username }).then(function (eula) {
+        var verified = !eula ? false : true;
+        res.status(200).send(verified);
+      }).catch(function (error) {
+        res.status(500).send(error);
+      });
+    } else {
+      res.status(401).send(false);
+    }
+  });
+
+  router.get('/account/organizations', function (req, res) {
+    var passport = req.session.passport;
+
+
+    if (passport && passport['user']) {
+      var _passport$user = passport.user,
+          accessToken = _passport$user.accessToken,
+          username = _passport$user.profile.username;
+
+      _this.getOrganizations({ accessToken: accessToken, username: username }).then(function (organizations) {
+        res.status(200).send(organizations);
+      }).catch(function (error) {
+        console.log('error', error);
+        res.status(500).send(error);
+      });
+    } else {
+      res.status(401).send(false);
+    }
+  });
+
+  router.post('/account/verify', this.VerifyAccountMiddleware, function (req, res) {
+    res.status(200).send(true);
   });
 
   router.post('/register', function (req, res) {

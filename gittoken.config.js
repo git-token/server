@@ -33,7 +33,8 @@ const config = {
   githubCredentials: {
     clientID: process.env['GITHUB_API_ID'],
     clientSecret: process.env['GITHUB_API_SECRET'],
-    callbackURL: process.env['GITHUB_API_CALLBACK_URL']
+    callbackURL: process.env['GITHUB_API_CALLBACK_URL'],
+    scope: process.env['GITHUB_API_SCOPE']
   },
   api: {
     sessionSecret: process.env['GITTOKEN_API_SESSION_SECRET'],

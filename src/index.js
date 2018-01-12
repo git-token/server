@@ -16,7 +16,8 @@ import {
 } from './utils/index'
 
 import {
-  createOrgWebHook
+  createOrgWebHook,
+  getOrganizations
 } from './github/index'
 
 import GitTokenContracts from './contracts/index'
@@ -28,7 +29,12 @@ import {
   saveTotalSupply,
   getContributions,
   getTokenSupply,
-  getUserBalances
+  getUserBalances,
+  saveUserDetails,
+  getUserDetails,
+  saveEndUserLicenseAgreement,
+  getEndUserLicenseAgreement,
+  updateUserAddress
 } from './mysql/index'
 
 import {
@@ -39,7 +45,9 @@ import {
 } from './routers/index'
 
 import {
-  WebHookMiddleware
+  WebHookMiddleware,
+  SaveUserMiddleware,
+  VerifyAccountMiddleware
 } from './middleware/index'
 
 import {
@@ -74,26 +82,34 @@ export default class GitTokenServer extends GitTokenContracts {
     this.web3Provider = web3Provider
 
     /* Bind Methods */
+    this.query = query.bind(this)
     this.AuthRouter = AuthRouter.bind(this)
     this.WebHookRouter = WebHookRouter.bind(this)
     this.ApiRouter = ApiRouter.bind(this)
     this.AccountRouter = AccountRouter.bind(this)
     this.WebHookMiddleware = WebHookMiddleware.bind(this)
+    this.SaveUserMiddleware = SaveUserMiddleware.bind(this)
+    this.VerifyAccountMiddleware = VerifyAccountMiddleware.bind(this)
     this.parseContribution = parseContribution.bind(this)
     this.validateWebHookRequest = validateWebHookRequest.bind(this)
     this.signContribution = signContribution.bind(this)
-    this.query = query.bind(this)
     this.saveContribution = saveContribution.bind(this)
     this.saveUserBalance = saveUserBalance.bind(this)
     this.saveTotalSupply = saveTotalSupply.bind(this)
     this.getContributions = getContributions.bind(this)
     this.getTokenSupply = getTokenSupply.bind(this)
     this.getUserBalances = getUserBalances.bind(this)
+    this.saveUserDetails = saveUserDetails.bind(this)
+    this.getUserDetails = getUserDetails.bind(this)
+    this.saveEndUserLicenseAgreement = saveEndUserLicenseAgreement.bind(this)
+    this.getEndUserLicenseAgreement = getEndUserLicenseAgreement.bind(this)
+    this.updateUserAddress = updateUserAddress.bind(this)
 
     this.handleContribution = handleContribution.bind(this)
     this.handleEventActions = handleEventActions.bind(this)
     this.handlePingEvent = handlePingEvent.bind(this)
     this.createOrgWebHook = createOrgWebHook.bind(this)
+    this.getOrganizations = getOrganizations.bind(this)
 
 
     /* Gitter WebHook Integration */
@@ -119,14 +135,18 @@ export default class GitTokenServer extends GitTokenContracts {
     this.app.use(bodyParser.json()) // handle json data
     this.app.use(bodyParser.urlencoded({ extended: true })) // handle
 
+
     this.app.use('/api/', this.ApiRouter());
     this.app.use('/auth/', this.AuthRouter());
     this.app.use('/webhook/', this.WebHookRouter());
-    this.app.use('/account', this.AccountRouter());
+    // this.app.use('/account', this.AccountRouter());
 
-    // Serve Web Applications
-    this.app.use('/registry', express.static(`${process.cwd()}/node_modules/gittoken-registry-ui/`))
-    this.app.use('/', express.static(`${process.cwd()}/node_modules/gittoken-landing-page/`))
+    // Serve Web Application UI
+    this.app.use('/', express.static(`${process.cwd()}/ui/`))
+
+    this.app.use((req, res) => {
+      res.redirect('/')
+    })
 
 
     /* Run GitToken Server */

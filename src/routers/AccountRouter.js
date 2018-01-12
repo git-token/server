@@ -1,12 +1,10 @@
-import { Router } from 'express'
+import express, { Router } from 'express'
 
 export default function AccountRouter() {
   let router = Router()
 
   // Serve static web apps
-  router.get('/', (req, res) => {
-    res.send(true)
-  })
+  router.use('/', express.static(`${process.cwd()}/node_modules/gittoken-account-ui/`))
 
   return router
 }

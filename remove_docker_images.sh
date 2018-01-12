@@ -5,6 +5,6 @@ do
   then
     echo "Deleting Docker Image tagged as 'none'"
     echo ${var}
-    docker rmi ${var}
+    docker rmi -f ${var}
   fi;
   done
